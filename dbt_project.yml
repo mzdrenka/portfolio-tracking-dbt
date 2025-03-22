@@ -49,3 +49,7 @@ models:
       portfolio:  # one specific data mart
         +materialized: table
         +schema: MART_PORTFOLIO
+
+snapshots:
+  portfolio_tracking:
+    +target_schema: SNAPSHOTS
