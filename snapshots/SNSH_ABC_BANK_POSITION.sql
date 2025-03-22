@@ -10,6 +10,6 @@
     }}
 
     select *
-    from {{ ref('STG_ABC_BANK_POSITION') }}
+    from {{ ref("STG_ABC_BANK_POSITION") }}
 
 {% endsnapshot %}
