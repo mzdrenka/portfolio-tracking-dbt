@@ -49,23 +49,26 @@ with
     ),
     hashed as (
         select
-            concat_ws('|', id) as exchange_hkey,
-            concat_ws(
-                '|',
-                name,
-                id,
-                country,
-                city,
-                zone,
-                delta,
-                dst_period,
-                open,
-                close,
-                lunch,
-                open_utc,
-                close_utc,
-                lunch_utc
-            ) as exchange_hdiff,
+            {{ dbt_utils.surrogate_key(["id"]) }} as exchange_hkey,
+            {{
+                dbt_utils.surrogate_key(
+                    [
+                        "name",
+                        "id",
+                        "country",
+                        "city",
+                        "zone",
+                        "delta",
+                        "dst_period",
+                        "open",
+                        "close",
+                        "lunch",
+                        "open_utc",
+                        "close_utc",
+                        "lunch_utc",
+                    ]
+                )
+            }} as exchange_hdiff,
             * exclude load_ts,
             load_ts as load_ts_utc
         from src_data_and_default_record

@@ -49,21 +49,24 @@ with
     ),
     hashed as (
         select
-            concat_ws('|', country_name) as country_hkey,
-            concat_ws(
-                '|',
-                country_name,
-                country_code_2_letter,
-                country_code_3_letter,
-                country_code_numeric,
-                iso_3166_2,
-                region,
-                sub_region,
-                intermediate_region,
-                region_code,
-                sub_region_code,
-                intermediate_region_code
-            ) as country_hdiff,
+            {{ dbt_utils.surrogate_key(["country_name"]) }} as country_hkey,
+            {{
+                dbt_utils.surrogate_key(
+                    [
+                        "country_name",
+                        "country_code_2_letter",
+                        "country_code_3_letter",
+                        "country_code_numeric",
+                        "iso_3166_2",
+                        "region",
+                        "sub_region",
+                        "intermediate_region",
+                        "region_code",
+                        "sub_region_code",
+                        "intermediate_region_code",
+                    ]
+                )
+            }} as country_hdiff,
             * exclude load_ts,
             load_ts as load_ts_utc
         from src_data_and_default_record

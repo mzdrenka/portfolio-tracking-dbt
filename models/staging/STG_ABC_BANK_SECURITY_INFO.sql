@@ -35,16 +35,19 @@ with
     ),
     hashed as (
         select
-            concat_ws('|', security_code) as security_hkey,
-            concat_ws(
-                '|',
-                security_code,
-                security_name,
-                sector_name,
-                industry_name,
-                country_code,
-                exchange_code
-            ) as security_hdiff,
+            {{ dbt_utils.surrogate_key(["security_code"]) }} as security_hkey,
+            {{
+                dbt_utils.surrogate_key(
+                    [
+                        "security_code",
+                        "security_name",
+                        "sector_name",
+                        "industry_name",
+                        "country_code",
+                        "exchange_code",
+                    ]
+                )
+            }} as security_hdiff,
             * exclude load_ts,
             load_ts as load_ts_utc
         from src_data_and_default_record

@@ -33,10 +33,18 @@ with
     ),
     hashed as (
         select
-            concat_ws('|', alphabeticcode) as currency_hkey,
-            concat_ws(
-                '|', alphabeticcode, numericcode, decimaldigits, currencyname, locations
-            ) as currency_hdiff,
+            {{ dbt_utils.surrogate_key(["alphabeticcode"]) }} as currency_hkey,
+            {{
+                dbt_utils.surrogate_key(
+                    [
+                        "alphabeticcode",
+                        "numericcode",
+                        "decimaldigits",
+                        "currencyname",
+                        "locations",
+                    ]
+                )
+            }} as currency_hdiff,
             * exclude load_ts,
             load_ts as load_ts_utc
         from src_data_and_default_record
